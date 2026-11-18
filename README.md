@@ -20,7 +20,7 @@ rnmp-dz1/
 ├── flink-app/         Flink 2.3 апликација (Maven проект, Java 17)
 ├── dashboard/         Streamlit dashboard (бонус)
 ├── results/           скрипта за споредба и резултати од експериментот
-├── docs/              документација (PDF и HTML извор)
+├── docs/              документација (PDF)
 ├── create_topic.sh    го креира влезниот topic со 4 партиции
 ├── experiment.sh      експеримент earliest наспроти latest
 └── data/              податоци (не се во репото, види чекор 2)
@@ -41,15 +41,13 @@ Java 17. На Linux `JAVA_HOME` треба да покажува на JDK 17.
 
 ## 1. Kafka
 
-Kafka се стартува од репото на предметот, во посебна папка (не во ова репо):
+Kafka се стартува од репото на предметот:
 
 ```sh
 git clone https://github.com/stefanandonov/RNMP_homework1.git
 cd RNMP_homework1
 docker compose up -d --wait        # Kafka на localhost:9092
 ```
-
-`./stop.sh` во истото репо ја гаси Kafka и ги брише сите податоци.
 
 ## 2. Податоци
 
@@ -61,8 +59,7 @@ curl -L -o data/2026-09_pms5003.zip \
   https://archive.sensor.community/csv_per_month/2026-09/2026-09_pms5003.zip
 ```
 
-Датотеката има ~30 MB, а серверот е бавен (симнувањето трае неколку минути). Не треба да се
-распакува: producer-от го чита CSV-то директно од zip-от.
+Датотеката не треба да се распакува: producer-от го чита CSV-то директно од zip-от.
 
 ## 3. Python околина
 
@@ -83,8 +80,7 @@ python3 -m venv .venv
 ./create_topic.sh
 ```
 
-Го креира `air-quality` со 4 партиции. Треба да се изврши **пред** Flink апликацијата. Ако topic-от
-не постои, Kafka изворот може да чека и до 5 минути додека не го открие.
+Го креира `air-quality` со 4 партиции. Се извршува **пред** Flink апликацијата.
 
 ## 5. Flink апликација
 
@@ -96,10 +92,6 @@ cd flink-app
 `run-job.sh` го компајлира проектот со Maven и ја стартува апликацијата со обична `java` команда
 (локален Flink mini-cluster). Апликацијата работи додека не се прекине со `Ctrl+C`. Откако ќе се
 испечати `Start: ...`, почекајте ~10 секунди пред да го стартувате producer-от.
-
-`mvn exec:java` не работи со Flink 2.3 поради classloader-от, затоа се користи скриптата.
-Од IntelliJ: отворете ја папката `flink-app` (SDK 17) и стартувајте `AirQualityJob` со истите
-аргументи, со вклучено *Add dependencies with "provided" scope to classpath*.
 
 | Аргумент | Default | Значење |
 |---|---|---|
@@ -176,10 +168,9 @@ cd flink-app
 .venv/bin/streamlit run dashboard/dashboard.py
 ```
 
-Се отвора на http://localhost:8501 и се освежува на секои 2 секунди. Првиот пат Streamlit може
-да побара email, доволно е Enter. Во левата лента се избира извршувањето (вредноста на `--run`,
-празно за `aq-stats` и `aq-alerts`) и дали topics да се читаат од почеток. За приказ во живо:
-прво dashboard-от, потоа Flink апликацијата, на крајот producer-от.
+Се отвора на http://localhost:8501 и се освежува на секои 2 секунди. Во левата лента се избира
+извршувањето (вредноста на `--run`, празно за `aq-stats` и `aq-alerts`) и дали topics да се читаат
+од почеток. За приказ во живо: прво dashboard-от, потоа Flink апликацијата, на крајот producer-от.
 
 ## 9. Експеримент: earliest наспроти latest
 
