@@ -1,0 +1,8 @@
+data/
+.venv/
+target/
+.idea/
+__pycache__/
+.DS_Store
+results/*.log
+docs/dokumentacija.html
