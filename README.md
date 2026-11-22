@@ -33,7 +33,7 @@ rnmp-dz1/
 | Docker (Docker Desktop) | 29.1 |
 | JDK 17 | OpenJDK 17.0.18 |
 | Maven | 3.10.1 |
-| Python | 3.12 (доволно е 3.9+) |
+| Python | 3.12 (потребно е 3.11+, поради Streamlit) |
 | Git, curl | |
 
 Командите се за macOS и Linux (на Windows: WSL или Git Bash). На macOS скриптите сами ја наоѓаат
